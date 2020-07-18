@@ -15,7 +15,7 @@ if (valid.checkParams(params,USER.schema.obj)!="true") {
 	res.status(403).json(valid.checkParams(params,USER.schema.obj));
 	return;
 }
-if (valid.checkEmail(params.password)!="true") {
+if (valid.checkPassword(params.password)!="true") {
 	res.status(403).json(valid.checkPassword(params.password));
 	return;
 }
@@ -49,7 +49,8 @@ var skip = 10;
 if (params.skip != null) {
 	skip = parseInt(params.skip);
 }
-USER.find({}).limit(limit).sort({_id: order}).skip(skip).exec((err, docs) => {
+
+USER.find({}).limit(limit).sort({_id: order}).skip(skip).exec({},(err, docs) => {
 		res.status(200).json(docs);
 	});
 });
@@ -79,6 +80,7 @@ var r = await USER.remove({_id: req.query.id});
 	res.status(300).json(r);
 });
 
+
 router.post("/indexlogin", async(req,res)=>{
     var body = req.body;
     if (body.name == null) {
@@ -92,8 +94,8 @@ router.post("/indexlogin", async(req,res)=>{
 var results = await USER.find({name: body.name, password: body.password});
     if (results.length == 1) {
 		var token = JWT.sign({
-			exp:Math.floor(Date.now()/1000)+(60*60),
-			data:results._id
+			exp: Math.floor(Date.now() / 1000)+(60*60),
+			data: results[0].id
 		},'datamongoose');
 
         res.status(200).json({msn: "Bienvenido " + body.name , token:token });
@@ -137,17 +139,9 @@ router.put("/updateavatar", midleware, (req, res) => {
         } 
         res.status(200).json(docs);
     	});
-        /*var user = new USER(obj);
-        user.save((err, docs) => {
-            if (err) {
-                res.status(500).json({msn: "ERROR "})
-                return;
-            }
-            res.status(200).json({name: image.name});
-        });*/
     });
 
-    /*var allowkeylist = ["nick", "email", "age"];
+    /*var allowkeylist = ["name", "email", "password"];
     var keys = Object.keys(bodydata);
     var updateobjectdata = {};
     for (var i = 0; i < keys.length; i++) {

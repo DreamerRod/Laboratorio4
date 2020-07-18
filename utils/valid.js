@@ -15,6 +15,7 @@ for (var i = 0; i < Object.keys(evalueobj).length; i++) {
 	}
 }
 if (msn!="") {
+	msn="añadir datos: "+msn;
 	return msn;
 }
 
@@ -69,6 +70,9 @@ if (refobj.name!=null || refobj.name!="") {
 					}
 					if (refobj.relativepath==""||refobj.relativepath==null) {
 						refobj.relativepath=="";
+					}
+					if (refobj.permisos==""||refobj.permisos==null) {
+						refobj.permisos=="";
 					}
 					if (refobj.address!=null || refobj.address!="") {
 						msn="true";
